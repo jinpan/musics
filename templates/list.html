@@ -24,27 +24,29 @@
 		<div class="ui grid">
 			<div class="four wide column"></div>
 			<div class="eight wide column" id="song_list">
-			  <div class="ui raised segment">
-			  	<div class="ui ribbon label">40 <i class="like icon"></i></div>
-			  	<a class="like ui corner label vote">
-			        <i class="like icon"></i>
-			    </a>
-			  <a href="youtube.com">Gangnam Style Super Remix</a>
-			  </div>
+			  
 			</div>
 			<div class="four wide column"></div>
 		</div>
 	</body>
 
 	<script>
+		$.getJSON('api/queue', function(data) {
+		  var items = [];
+		  $.each(data, function(key, val) {
+		    $("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label">'+val['votes']+' <i class="like icon"></i></div><a class="like ui corner label vote"><i class="like icon"></i></a><a href="'+val['url']+'">'+val['title']+'</a></div>');
+		  });
+		 
+		});
+
 		$("#song_list").on("click", ".vote", function(){
 			if($(this).hasClass("red")==false){
-				// post upvote
+				$.post("api/upvote", { id: 1 } );
 				$(this).addClass("red");
 				$(this).closest(".segment").children(".ribbon").addClass("red");
 				$(this).closest(".segment").transition("pulse");
 			}else{
-				// post downvote
+				$.post("api/downvote", { id: 1 } );
 				$(this).removeClass("red");
 				$(this).closest(".segment").children(".ribbon").removeClass("red");
 			}
@@ -53,6 +55,9 @@
 			// post add song, get response, put response into html to get name
 			$("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label red">1 <i class="like icon"></i></div><a class="like ui corner label vote red"><i class="like icon"></i></a><a href="youtube.com">White and Nerdy -- Weird Al</a></div>');
 			$("#song_list").children(".segment:last-child").transition("pulse");
+			alert($("#song_search").val());
+			$.post("api/add", { url: $("#song_search").val() } );
+
 		});
 	</script>
 
