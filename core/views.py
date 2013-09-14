@@ -67,3 +67,7 @@ def upvote(request):
         return HttpResponse(dumps({'status': status}),
                             mimetype="application/json")
 
+
+def home(request):
+    return HttpResponse("Hello World")
+

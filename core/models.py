@@ -40,7 +40,7 @@ class QueueItemManager(models.Manager):
         qs = QueueItem.objects.filter(active=True).order_by('-votes',
                                                             'post_time',
                                                             'vote_time')
-        return qs.values('id', 'title', 'url', 'votes', )
+        return qs.values('id', 'title', 'thumbnail_url', 'url', 'votes', )
 
 
 class QueueItem(models.Model):
@@ -84,6 +84,11 @@ class QueueItem(models.Model):
         max_length=100,
     )
 
+    thumbnail_url = models.CharField(
+        _('thumbnail url'),
+        max_length=100,
+    )
+
     objects = QueueItemManager()
 
     def upvote(self):
@@ -99,13 +104,21 @@ class QueueItem(models.Model):
     def __init__(self, *args, **kwargs):
         url = kwargs.get('url', '')
 
-        template = r'^http://www\.youtube\.com/watch\?[^/]+$'
-        if not match(template, url):
+        template = r'^http://www\.youtube\.com/watch\?v=([^/]+)$'
+        m = match(template, url)
+        if m:
+            video_id = m.group(1)
+            kwargs['thumbnail_url'] = \
+                'http://img.youtube.com/vi/%s/sddefault.jpg' % video_id
+        else:
             raise ValueError('Invalid URL')
-
-        soup = BeautifulSoup(get(url).content)
-        title = soup.find('span', {'id': 'eow-title'}).text.strip()
-        kwargs['title'] = title
+        
+        try:
+            soup = BeautifulSoup(get(url).content)
+            title = soup.find('span', {'id': 'eow-title'}).text.strip()
+            kwargs['title'] = title
+        except:
+            raise ValueError('Unable to load the video page')
 
         super(QueueItem, self).__init__(*args, **kwargs)
 
