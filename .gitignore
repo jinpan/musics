@@ -1,2 +1,6 @@
 # compiled files
 *.pyc
+
+# local files
+settings_local.py
+
