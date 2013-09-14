@@ -2,12 +2,16 @@
 <html>
 {% include "site_head.html" %}
 	<body>
+		<br/>
+		<h1 class="ui center aligned header teal"><i class="headphones icon"></i>auto.DJ</h1>
+		<br/>
+		<br/>
 		<div class="ui grid">
 			<div class="five wide column"></div>
 			<div class="six wide column">
 				<div class="ui action input">
-				  <input type="text" placeholder="Song name" style="width:290px;">
-				  <div class="ui teal button"><i class="headphones icon"></i> Add Song</div>
+				  <input type="text" id="song_search" placeholder="Enter Song's Youtube URL" style="width:290px;">
+				  <div class="ui teal button" id="add_song"><i class="headphones icon"></i> Add Song</div>
 				</div>
 			</div>
 			<div class="five wide column"></div>
@@ -15,10 +19,10 @@
 		<br/>
 		<div class="ui grid">
 			<div class="four wide column"></div>
-			<div class="eight wide column">
+			<div class="eight wide column" id="song_list">
 			  <div class="ui raised segment">
 			  	<div class="ui ribbon label">40 <i class="like icon"></i></div>
-			  	<a class="like ui corner label">
+			  	<a class="like ui corner label vote">
 			        <i class="like icon"></i>
 			    </a>
 			  <a href="youtube.com">Gangnam Style Super Remix</a>
@@ -28,4 +32,23 @@
 		</div>
 	</body>
 
+	<script>
+		$(".vote").click(function(){
+			if($(this).hasClass("red")==false){
+				// post upvote
+				$(this).addClass("red");
+				$(this).closest(".segment").children(".ribbon").addClass("red");
+			}else{
+				// post downvote
+				$(this).removeClass("red");
+				$(this).closest(".segment").children(".ribbon").removeClass("red");
+			}
+		});
+		$("#add_song").click(function(){
+			// post add song, get response, put response into html to get name
+			$("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label">1 <i class="like icon"></i></div><a class="like ui corner label upvote red"><i class="like icon"></i></a><a href="youtube.com">White and Nerdy -- Weird Al</a></div>');
+		});
+	</script>
+
 </html>
+
