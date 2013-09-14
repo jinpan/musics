@@ -16,7 +16,11 @@
 			</div>
 			<div class="five wide column"></div>
 		</div>
-		<br/>
+
+		<div class="ui horizontal icon divider">
+		  <i class="circular heart icon"></i>
+		</div>
+
 		<div class="ui grid">
 			<div class="four wide column"></div>
 			<div class="eight wide column" id="song_list">
@@ -33,11 +37,12 @@
 	</body>
 
 	<script>
-		$(".vote").click(function(){
+		$("#song_list").on("click", ".vote", function(){
 			if($(this).hasClass("red")==false){
 				// post upvote
 				$(this).addClass("red");
 				$(this).closest(".segment").children(".ribbon").addClass("red");
+				$(this).closest(".segment").transition("pulse");
 			}else{
 				// post downvote
 				$(this).removeClass("red");
@@ -46,7 +51,8 @@
 		});
 		$("#add_song").click(function(){
 			// post add song, get response, put response into html to get name
-			$("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label">1 <i class="like icon"></i></div><a class="like ui corner label upvote red"><i class="like icon"></i></a><a href="youtube.com">White and Nerdy -- Weird Al</a></div>');
+			$("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label red">1 <i class="like icon"></i></div><a class="like ui corner label vote red"><i class="like icon"></i></a><a href="youtube.com">White and Nerdy -- Weird Al</a></div>');
+			$("#song_list").children(".segment:last-child").transition("pulse");
 		});
 	</script>
 
