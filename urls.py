@@ -7,10 +7,8 @@ from musics.core import urls as core_urls
 
 
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^$', 'core.views.home', name='home'),
-    url(r'^list', TemplateView.as_view(template_name='list.html')),
-
+    url(r'^list$', TemplateView.as_view(template_name='list.html')),
+    url(r'^play$', TemplateView.as_view(template_name='play.html')),
 )
 
 urlpatterns += core_urls.urlpatterns
