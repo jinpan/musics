@@ -101,24 +101,25 @@ class QueueItem(models.Model):
         self.votes -= 1
         self.save()
 
-    def __init__(self, *args, **kwargs):
-        url = kwargs.get('url', '')
+    def save(self, *args, **kwargs):
+        url = self.url
 
         template = r'^http://www\.youtube\.com/watch\?v=([^/]+)$'
         m = match(template, url)
         if m:
             video_id = m.group(1)
-            kwargs['thumbnail_url'] = \
-                'http://img.youtube.com/vi/%s/sddefault.jpg' % video_id
+            setattr(self,
+                    'thumbnail_url',
+                    'http://img.youtube.com/vi/%s/sddefault.jpg' % video_id)
         else:
             raise ValueError('Invalid URL')
         
         try:
             soup = BeautifulSoup(get(url).content)
-            title = soup.find('span', {'id': 'eow-title'}).text.strip()
-            kwargs['title'] = title
+            title = soup.find('meta', {'name': 'title'})['content']
+            setattr(self, 'title', title)
         except:
             raise ValueError('Unable to load the video page')
 
-        super(QueueItem, self).__init__(*args, **kwargs)
+        super(QueueItem, self).save(*args, **kwargs)
 

@@ -1,6 +1,7 @@
 from json import dumps
 
 from django.http.response import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from musics.core.models import QueueItemManager
 from musics.core.models import QueueItem
@@ -10,6 +11,7 @@ def get_queue(request):
                         mimetype="application/json")
 
 
+@csrf_exempt
 def add(request):
     if request.method != 'POST':
         raise TypeError("Must be a POST request")
@@ -27,6 +29,7 @@ def add(request):
                             mimetype="application/json")
 
 
+@csrf_exempt
 def dequeue(request):
     if request.method != 'POST':
         raise TypeError("Must be a POST request")
@@ -36,6 +39,7 @@ def dequeue(request):
                         mimetype="application/json")
 
 
+@csrf_exempt
 def downvote(request):
     if request.method != 'POST':
         raise TypeError("Must be a POST request")
@@ -52,12 +56,13 @@ def downvote(request):
                             mimetype="application/json")
  
  
+@csrf_exempt
 def upvote(request):
     if request.method != 'POST':
         raise TypeError("Must be a POST request")
     
     item_id = request.POST.get('id')
-
+    
     try:
         QueueItem.objects.get(id=item_id).upvote()
         status = "success"
