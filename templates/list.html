@@ -33,22 +33,29 @@
     </body>
 
     <script>
-        $.getJSON('api/queue', function(data) {
-          var items = [];
-          $.each(data, function(key, val) {
-            $("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label">'+val['votes']+' <i class="like icon"></i></div><a class="like ui corner label vote"><i class="like icon"></i></a><a href="'+val['url']+'">'+val['title']+'</a></div>');
-          });
-         
-        });
+        function load_queue(){
+            $.getJSON('api/queue', function(data) {
+            $("#song_list")[0].innerHTML = '';
+            var items = [];
+            $.each(data, function(key, val) {
+                $("#song_list").append('<div class="ui raised segment"><div class="ui ribbon label">'+val['votes']+' <i class="like icon"></i></div><a class="like ui corner label vote" data-id="'+val['id']+'"><i class="like icon"></i></a><a href="'+val['url']+'">'+val['title']+'</a></div>');
+            });
+            
+            });
+        }
+
+        load_queue();
 
         $("#song_list").on("click", ".vote", function(){
+            var id = $(this).data('id');
+
             if($(this).hasClass("red")==false){
-                $.post("api/upvote", { id: 1 } );
+                $.post("api/upvote", { "id": id} );
                 $(this).addClass("red");
                 $(this).closest(".segment").children(".ribbon").addClass("red");
                 $(this).closest(".segment").transition("pulse");
             }else{
-                $.post("api/downvote", { id: 1 } );
+                $.post("api/downvote", { "id": id} );
                 $(this).removeClass("red");
                 $(this).closest(".segment").children(".ribbon").removeClass("red");
             }
